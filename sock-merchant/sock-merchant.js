@@ -68,7 +68,9 @@ const tests = [
 const runTests = tests => {
   tests.forEach(test => {
     console.log("************************************************");
+    const start = new Date();
     const result = sockMerchant(test.n, test.ar);
+    const end = new Date() - start;
     console.log(`n: ${test.n} ar: ${test.ar}`);
     console.log(`expected: ${test.expected}`);
     console.log(`received: ${result}`);
@@ -80,6 +82,7 @@ const runTests = tests => {
     } else {
       console.log("Test success :)");
     }
+    console.log("Algorithm executed in: %dms", end);
     console.log("************************************************");
   });
 };

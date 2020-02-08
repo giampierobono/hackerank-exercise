@@ -1,4 +1,5 @@
-const areCloudsArrayElementsValid = (clouds) => !clouds.some((el) => el < 0 || el > 1)
+const areCloudsArrayElementsValid = clouds =>
+  !clouds.some(el => el < 0 || el > 1);
 
 const isCloudsArrayValid = (clouds, fullCheck) =>
   clouds.length >= 2 &&
@@ -31,31 +32,60 @@ const jumpingOnClouds = c => {
 // TESTS
 const tests = [
   {
-    clouds: [0,0,1,0,0,1,0],
+    clouds: [0, 0, 1, 0, 0, 1, 0],
     expected: 4
   },
   {
-    clouds: [0,0,0,1,0,0],
+    clouds: [0, 0, 0, 1, 0, 0],
     expected: 3
   },
   {
-    clouds: [0,0],
+    clouds: [0, 0],
     expected: 1
   },
   {
-    clouds: [0,1,0],
+    clouds: [0, 1, 0],
     expected: 1
   },
   {
-    clouds: [0,0,1,0],
+    clouds: [0, 0, 1, 0],
     expected: 2
   },
   {
-    clouds: [0,0,1,0,0,1,0,0,0,1,0,0,1,0],
+    clouds: [0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
     expected: 8
   },
   {
-    clouds: [0,0,1,0,0,1,0,0,0,1,0,0,1,0,0,0,1,0,0,1,0,0,0,1,0,0,1,0],
+    clouds: [
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      1,
+      0
+    ],
     expected: 16
   },
   {
@@ -67,7 +97,9 @@ const tests = [
 const runTests = tests => {
   tests.forEach(test => {
     console.log("************************************************");
+    const start = new Date();
     const result = jumpingOnClouds(test.clouds);
+    const end = new Date() - start;
     console.log(`clouds: ${test.clouds}`);
     console.log(`expected: ${test.expected}`);
     console.log(`received: ${result}`);
@@ -79,6 +111,7 @@ const runTests = tests => {
     } else {
       console.log("Test success :)");
     }
+    console.log("Algorithm executed in: %dms", end);
     console.log("************************************************");
   });
 };

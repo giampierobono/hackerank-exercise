@@ -31,60 +31,63 @@ const countingValleys = (n, s) => {
 
 // TESTS
 const tests = [
-    {
-      n: 8,
-      s: "UDDDUDUU",
-      expected: 1
-    },
-    {
-      n: 8,
-      s: "UDDDUDUD",
-      expected: 0
-    },
-    {
-      n: 101,
-      s: "UDUDUDUU",
-      expected: 0
-    },
-    {
-      n: 8,
-      s: "UDUDUDUU",
-      expected: 0
-    },
-    {
-      n: 16,
-      s: "UDDDUDUUDDDUDDUU",
-      expected: 1
-    },
-    {
-      n: 7,
-      s: "UDUDZDU",
-      expected: 1
-    },
-    {
-      n: 1,
-      s: "U",
-      expected: 0
+  {
+    n: 8,
+    s: "UDDDUDUU",
+    expected: 1
+  },
+  {
+    n: 8,
+    s: "UDDDUDUD",
+    expected: 0
+  },
+  {
+    n: 101,
+    s: "UDUDUDUU",
+    expected: 0
+  },
+  {
+    n: 8,
+    s: "UDUDUDUU",
+    expected: 0
+  },
+  {
+    n: 16,
+    s: "UDDDUDUUDDDUDDUU",
+    expected: 1
+  },
+  {
+    n: 7,
+    s: "UDUDZDU",
+    expected: 1
+  },
+  {
+    n: 1,
+    s: "U",
+    expected: 0
+  }
+];
+
+const runTests = tests => {
+  tests.forEach(test => {
+    console.log("************************************************");
+    const start = new Date();
+    const result = countingValleys(test.n, test.s);
+    const end = new Date() - start;
+    console.log(`n: ${test.n} s: ${test.s}`);
+    console.log(`expected: ${test.expected}`);
+    console.log(`received: ${result}`);
+
+    if (result !== test.expected) {
+      console.error(
+        `Test failed :( expected: ${test.expected} - received: ${result}`
+      );
+    } else {
+      console.log("Test success :)");
     }
-  ];
-  
-  const runTests = tests => {
-    tests.forEach(test => {
-      console.log("************************************************");
-      const result = countingValleys(test.n, test.s);
-      console.log(`n: ${test.n} s: ${test.s}`);
-      console.log(`expected: ${test.expected}`);
-      console.log(`received: ${result}`);
-  
-      if (result !== test.expected) {
-        console.error(
-          `Test failed :( expected: ${test.expected} - received: ${result}`
-        );
-      } else {
-        console.log("Test success :)");
-      }
-      console.log("************************************************");
-    });
-  };
-  
-  console.log(runTests(tests));
+    console.log("Algorithm executed in: %dms", end);
+    console.log("************************************************");
+  });
+};
+
+console.log(runTests(tests));
