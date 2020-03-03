@@ -50,6 +50,7 @@ const minimumBribes = (q) => {
     return bribesCount;
 }
 
+// RESULT IS WRONG: 836 should be 966
 console.log(minimumBribes([
   2,
   1,

@@ -74,7 +74,7 @@ const runTests = tests => {
     const start = new Date();
     const result = countingValleys(test.n, test.s);
     const end = new Date() - start;
-    console.log(`n: ${test.n} s: ${test.s}`);
+    console.log(`n: test.n} s: ${test.s}`);
     console.log(`expected: ${test.expected}`);
     console.log(`received: ${result}`);
 
