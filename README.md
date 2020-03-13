@@ -1,1 +1,1 @@
-# hackerank-exercise
+Keep training :)
