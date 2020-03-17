@@ -1,106 +1,93 @@
 class MinHeap {
   constructor() {
-    this.heap = [];
+    this.heap = []; // left -> 2i + 1, right -> 2i + 2
+  }
+
+  insert(data) {
+    // O(logN)
+    this.heap.push(data);
+    this.bubbleUp();
+  }
+
+  bubbleUp() {
+    const bubbleUpRecursive = pointer => {
+      if (pointer === 0) {
+        return;
+      }
+      const parentIdx = Math.floor((pointer - 1) / 2);
+
+      if (this.heap[parentIdx] > this.heap[pointer]) {
+        [this.heap[parentIdx], this.heap[pointer]] = [
+          this.heap[pointer],
+          this.heap[parentIdx]
+        ];
+      }
+      bubbleUpRecursive(parentIdx);
+    };
+
+    bubbleUpRecursive(this.size() - 1);
+  }
+
+  extractMin() {
+    const min = this.getMin();
+    this.heap[0] = this.heap.pop();
+    this.heapify(0);
+    return min;
+  }
+
+  heapify(position) {
+    const left = 2 * position + 1;
+    const right = 2 * position + 2;
+    let lowest = position;
+
+    if (left <= this.size() - 1 && this.heap[left] < this.heap[lowest]) {
+      lowest = left;
+    }
+
+    if (right <= this.size() - 1 && this.heap[right] < this.heap[lowest]) {
+      lowest = right;
+    }
+
+    if (lowest !== position) {
+      [this.heap[lowest], this.heap[position]] = [
+        this.heap[position],
+        this.heap[lowest]
+      ];
+
+      this.heapify(lowest);
+    }
+  }
+
+  size() {
+    return this.heap.length;
+  }
+
+  delete(index) {
+    this.decraseKey(index);
+    this.extractMin();
+  }
+
+  decraseKey(index) {
+    this.heap[index] = Number.MIN_VALUE;
+    [this.heap[index], this.heap[this.size() - 1]] = [
+      this.heap[this.size() - 1],
+      this.heap[index]
+    ];
+    this.bubbleUp();
   }
 
   getMin() {
     return this.heap[0];
   }
-
-  heapify(position) {
-    const left = position * 2 + 1;
-    const right = position * 2 + 2;
-    let smallest = position;
-    const length = this.heap.length - 1;
-
-    if (left < length && this.heap[left] < this.heap[smallest]) {
-      smallest = left;
-    }
-    if (right < length && this.heap[right] < this.heap[smallest]) {
-      smallest = right;
-    }
-
-    if (smallest !== position) {
-      [this.heap[position], this.heap[smallest]] = [
-        this.heap[smallest],
-        this.heap[position]
-      ];
-      this.heapify(smallest);
-    }
-  }
-
-  extractMin() {
-    const toReturn = this.getMin();
-    this.heap[0] = this.heap.pop();
-    this.heapify(0);
-    return toReturn;
-  }
-
-  bubbleUp() {
-    let currentElementIdx = this.heap.length - 1;
-
-    const bubbleUpRecursive = currentIdx => {
-      if (currentIdx === 0) {
-        return;
-      }
-      const parentIndex = Math.floor((currentIdx - 1) / 2);
-      if (this.heap[parentIndex] > this.heap[currentIdx]) {
-        [this.heap[parentIndex], this.heap[currentIdx]] = [
-          this.heap[currentIdx],
-          this.heap[parentIndex]
-        ];
-        bubbleUpRecursive(parentIndex);
-      }
-    };
-
-    bubbleUpRecursive(currentElementIdx);
-  }
-
-  decrementKey(position) {
-    this.heap[position] = Number.MIN_SAFE_INTEGER;
-    [this.heap[position], this.heap[this.heap.length - 1]] = [
-      this.heap[this.heap.length - 1],
-      this.heap[position]
-    ];
-    this.bubbleUp();
-  }
-
-  delete(data) {
-    const dataIndex = this.heap.indexOf(data);
-    if (dataIndex !== -1) {
-      this.decrementKey(dataIndex);
-      this.extractMin();
-    }
-  }
-
-  insert(data) {
-    this.heap.push(data);
-
-    if (this.heap.length > 1) {
-      this.bubbleUp();
-    }
-  }
 }
 
-const minHeap = new MinHeap();
-minHeap.insert(4);
-minHeap.insert(0);
-minHeap.insert(2);
-minHeap.insert(5);
-minHeap.insert(6);
-minHeap.insert(7);
-minHeap.insert(8);
-minHeap.insert(1);
-minHeap.insert(9);
-minHeap.insert(12);
-minHeap.delete(8);
-minHeap.delete(12);
-minHeap.insert(3);
-minHeap.delete(6);
-minHeap.delete(9);
-minHeap.delete(5);
-minHeap.delete(3);
-minHeap.delete(2);
-minHeap.delete(1);
-minHeap.delete(0);
-console.log(minHeap.heap);
+const maxHeap = new MinHeap();
+maxHeap.insert(1);
+maxHeap.insert(10);
+maxHeap.insert(11);
+maxHeap.insert(2);
+maxHeap.insert(6);
+maxHeap.insert(3);
+maxHeap.extractMin();
+maxHeap.delete(2);
+console.log(maxHeap.heap);
