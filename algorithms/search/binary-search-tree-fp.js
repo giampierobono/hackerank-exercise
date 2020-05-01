@@ -1,23 +1,26 @@
 const createNode = (data, left, right) => ({
   data,
   left,
-  right
+  right,
 });
 
-const printNode = node => JSON.stringify(node, null, 2);
+const printNode = (node) =>
+  node !== null ? JSON.stringify(node, null, 2) : node;
 
-const addRecursive = currentNode => data => {
+const addRecursive = (currentNode) => (data) => {
   if (!currentNode) {
     return createNode(data);
-  } else if (currentNode.data > data) {
-    currentNode.left = addRecursive(currentNode.left)(data);
-  } else if (currentNode.data < data) {
-    currentNode.right = addRecursive(currentNode.right)(data);
   }
-  return currentNode;
+  const clonedCurrentNode = { ...currentNode };
+  if (clonedCurrentNode.data > data) {
+    clonedCurrentNode.left = addRecursive(clonedCurrentNode.left)(data);
+  } else if (clonedCurrentNode.data < data) {
+    clonedCurrentNode.right = addRecursive(clonedCurrentNode.right)(data);
+  }
+  return clonedCurrentNode;
 };
 
-const getDeepestNode = direction => currentNode => {
+const getDeepestNode = (direction) => (currentNode) => {
   if (!currentNode || !currentNode[direction]) {
     return currentNode;
   } else {
@@ -25,7 +28,7 @@ const getDeepestNode = direction => currentNode => {
   }
 };
 
-const find = currentNode => data => {
+const find = (currentNode) => (data) => {
   if (!currentNode) {
     return null;
   } else if (currentNode.data === data) {
@@ -37,41 +40,50 @@ const find = currentNode => data => {
   }
 };
 
-const removeRecursive = currentNode => toRemove => {
-  const isALeaf = node => !node.left && !node.right;
+const removeRecursive = (currentNode) => (toRemove) => {
+  const isALeaf = (node) => !node.left && !node.right;
 
   if (!currentNode) {
     return null;
-  } else if (currentNode.data > toRemove) {
-    currentNode.left = removeRecursive(currentNode.left)(toRemove);
-  } else if (currentNode.data < toRemove) {
-    currentNode.right = removeRecursive(currentNode.right)(toRemove);
-  } else if (currentNode.data === toRemove) {
-    if (isALeaf(currentNode) || (!currentNode.left && !currentNode.right)) {
+  }
+  const clonedCurrentNode = { ...currentNode };
+  if (clonedCurrentNode.data > toRemove) {
+    clonedCurrentNode.left = removeRecursive(clonedCurrentNode.left)(toRemove);
+  } else if (clonedCurrentNode.data < toRemove) {
+    clonedCurrentNode.right = removeRecursive(clonedCurrentNode.right)(
+      toRemove
+    );
+  } else if (clonedCurrentNode.data === toRemove) {
+    if (
+      isALeaf(clonedCurrentNode) ||
+      (!clonedCurrentNode.left && !clonedCurrentNode.right)
+    ) {
       return null;
-    } else if (!currentNode.left ^ !currentNode.right) {
-      if (!currentNode.left) {
-        return currentNode.right;
-      } else if (!currentNode.right) {
-        return currentNode.left;
+    } else if (!clonedCurrentNode.left ^ !clonedCurrentNode.right) {
+      if (!clonedCurrentNode.left) {
+        return clonedCurrentNode.right;
+      } else if (!clonedCurrentNode.right) {
+        return clonedCurrentNode.left;
       }
     } else {
-      const minNode = getDeepestNode("left")(currentNode.right);
-      currentNode.data = minNode.data;
-      currentNode.right = removeRecursive(currentNode.right)(minNode.data);
-      return currentNode;
+      const minNode = getDeepestNode("left")(clonedCurrentNode.right);
+      clonedCurrentNode.data = minNode.data;
+      clonedCurrentNode.right = removeRecursive(clonedCurrentNode.right)(
+        minNode.data
+      );
+      return clonedCurrentNode;
     }
   }
-  return currentNode;
+  return clonedCurrentNode;
 };
 
-const preOrder = currentNode => {
+const preOrder = (currentNode) => {
   const nodes = [];
 
   if (!currentNode) {
     return nodes;
   }
-  const preOrederRecursive = node => {
+  const preOrederRecursive = (node) => {
     if (!node) {
       return;
     }
@@ -83,10 +95,10 @@ const preOrder = currentNode => {
   return preOrederRecursive(currentNode);
 };
 
-const postOrder = currentNode => {
+const postOrder = (currentNode) => {
   const nodes = [];
 
-  const postOrderRecursive = node => {
+  const postOrderRecursive = (node) => {
     if (!node) {
       return;
     }
@@ -99,10 +111,10 @@ const postOrder = currentNode => {
   return postOrderRecursive(currentNode);
 };
 
-const inOrder = currentNode => {
+const inOrder = (currentNode) => {
   const nodes = [];
 
-  const inOrderRecursive = node => {
+  const inOrderRecursive = (node) => {
     if (!node) {
       return;
     }
@@ -116,33 +128,53 @@ const inOrder = currentNode => {
   return inOrderRecursive(currentNode);
 };
 
-const binarySearchTree = rootNode => ({
-  add: addRecursive(rootNode),
-  remove: removeRecursive(rootNode),
-  find: find(rootNode),
-  toString: () => printNode(rootNode),
-  findMin: () => getDeepestNode("left")(rootNode),
-  findMax: () => getDeepestNode("right")(rootNode),
-  preOrder: () => preOrder(rootNode),
-  postOrder: () => postOrder(rootNode),
-  inOrder: () => inOrder(rootNode)
-});
+const binarySearchTree = () => {
+  let rootNode = null;
 
-let rootNode = null;
-rootNode = binarySearchTree(rootNode).add(100);
-rootNode = binarySearchTree(rootNode).add(800);
-rootNode = binarySearchTree(rootNode).add(3);
-rootNode = binarySearchTree(rootNode).add(12);
+  const setRootNode = (newRoot) => (rootNode = newRoot);
+  const getRootNode = () => rootNode;
 
-console.log(binarySearchTree(rootNode).toString());
+  return {
+    getRootNode,
+    add: (data) => setRootNode(addRecursive(getRootNode())(data)),
+    remove: (data) => setRootNode(removeRecursive(getRootNode())(data)),
+    find: (toFind) => find(getRootNode())(toFind),
+    toString: () => printNode(getRootNode()),
+    findMin: () => getDeepestNode("left")(getRootNode()),
+    findMax: () => getDeepestNode("right")(getRootNode()),
+    preOrder: () => preOrder(getRootNode()),
+    postOrder: () => postOrder(getRootNode()),
+    inOrder: () => inOrder(getRootNode()),
+  };
+};
 
-console.log("preOrder: ", binarySearchTree(rootNode).preOrder());
-console.log("postOrder: ", binarySearchTree(rootNode).postOrder());
-console.log("inOrder: ", binarySearchTree(rootNode).inOrder());
+let bst = binarySearchTree();
+bst.add(100);
+bst.add(800);
+bst.add(3);
+bst.add(12);
 
-rootNode = binarySearchTree(rootNode).remove(100);
-rootNode = binarySearchTree(rootNode).remove(12);
-rootNode = binarySearchTree(rootNode).remove(800);
-rootNode = binarySearchTree(rootNode).remove(3);
+console.log(bst.toString());
+console.log("find min: ", printNode(bst.findMin()));
+console.log("find max: ", printNode(bst.findMax()));
 
-console.log(binarySearchTree(rootNode).toString());
+console.log("preOrder: ", bst.preOrder());
+console.log("postOrder: ", bst.postOrder());
+console.log("inOrder: ", bst.inOrder());
+
+console.log("removing 100 from tree");
+bst.remove(100);
+console.log(bst.toString());
+
+console.log("removing 12 from tree");
+bst.remove(12);
+console.log(bst.toString());
+
+console.log("removing 800 from tree");
+bst.remove(800);
+console.log(bst.toString());
+
+console.log("removing 3 from tree");
+bst.remove(3);
+console.log("root node should be null");
+console.log(bst.toString());
